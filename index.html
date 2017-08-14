@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="App">
+<head>
+    <meta charset="UTF-8">
+    <title>GDP Info-vis</title>
+    <link rel="stylesheet" href="dist/app.bundle.css">
+</head>
+<body layout layout-align="row" ng-controller="AppController as ac" ng-cloak>
+
+<md-content layout-fill style="background-color: #FFFFFF;">
+    <md-tabs md-autoselect="false" md-center-tabs="true" layout-fill>
+        <!-- HOME -->
+        <md-tab id="tab1" label="tab1">
+            <md-tab-label><md-icon md-svg-icon="home"></md-icon> Home</md-tab-label>
+            <md-tab-body class="md-padding">
+                <section layout="column" layout-fill class="home-tab" layout-align="center">
+                    <div>
+                        <md-card>
+                            <md-card-title>
+                                <md-card-title-media>
+                                    <div class="md-media-sm card-media">
+                                        <img src="dist/assets/puzzle.png" alt="puzzle">
+                                    </div>
+                                </md-card-title-media>
+                                <md-card-title-text class="card-text">
+                                    <span class="md-headline">What is GDP?</span>
+                                    <span class="md-subhead">
+                                        <span style="font-weight: bold;">Gross domestic product (GDP)</span> is a monetary measure of the market value of all final goods and services produced in a certain period (quarter or year). GDP one of the most widespread economic indicators and today we explain it visually!
+                                    </span>
+                                </md-card-title-text>
+                            </md-card-title>
+                        </md-card>
+                    </div>
+                    <div>
+                        <md-card>
+                            <md-card-title>
+                                <md-card-title-media>
+                                    <div class="md-media-sm card-media">
+                                        <img src="dist/assets/scatter-chart.png" alt="scatter">
+                                    </div>
+                                </md-card-title-media>
+                                <md-card-title-text class="card-text">
+                                    <span class="md-headline">Timeline of World GDP</span>
+                                    <span class="md-subhead">This interactive view represents the history of World GDP for last 57 years (from 1960 to 2016). Explore the correlation between Total GDP, GDP per person and Population of 217 countries, find out the TOP countries according to Total GDP and TOP countries according to GDP per person, and compare are these countries the same! Which countries were leaders according to Total GDP 50 years ago? Which countries are leaders according to Total GDP nowadays? Interact with a view and find out the answers!</span>
+                                </md-card-title-text>
+                            </md-card-title>
+                        </md-card>
+                    </div>
+                </section>
+            </md-tab-body>
+        </md-tab>
+
+        <!-- WHAT IS GDP? -->
+        <md-tab id="tab2" md-on-select="ac.selectedGdpTab()">
+            <md-tab-label>What is GDP</md-tab-label>
+            <md-tab-body class="md-padding">
+                <div layout-fill class="grid-container">
+                    <div class="countries-1">
+                        <md-input-container style="width:100%;">
+                            <label>First Country</label>
+                            <md-select ng-model="ac.vm.countryFirst" ng-change="ac.redrawGdpChart()">
+                                <md-option ng-repeat="country in ac.vm.countriesAll" ng-value="country">
+                                    {{country.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div class="countries-2">
+                        <md-input-container>
+                            <label>Year</label>
+                            <md-select ng-model="ac.vm.compareYear" ng-change="ac.redrawGdpTab()">
+                                <md-option ng-repeat="(year, value) in ac.model.years" ng-value="year">
+                                    {{year}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div class="countries-3">
+                        <md-input-container style="width:100%;">
+                            <label>Second Country</label>
+                            <md-select ng-model="ac.vm.countrySecond" ng-change="ac.redrawGdpChart()">
+                                <md-option ng-repeat="country in ac.vm.countriesAll" ng-value="country">
+                                    {{country.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div class="countries-4">
+                        <div google-chart chart="ac.charts.gdp"></div>
+                    </div>
+                    <div class="population-1">
+                        <canvas id="firstCountryPopulation"></canvas>
+                    </div>
+                    <div class="population-2">
+                        <div ng-show="ac.vm.countryFirst && ac.vm.countrySecond" class="gdp-money-label">
+                            <span class="amount">{{ (ac.vm.countryFirst.population / ac.CONST.POPULATION_DIVIDER).toFixed(1) }}</span>M vs <span class="amount">{{ (ac.vm.countrySecond.population / ac.CONST.POPULATION_DIVIDER).toFixed(1) }}</span>M
+                        </div>
+                    </div>
+                    <div class="population-3">
+                        <canvas id="secondCountryPopulation"></canvas>
+                    </div>
+                    <div class="population-4">
+                        Population
+                    </div>
+                    <div class="consumption-1">
+                        <canvas id="firstCountryConsumption"></canvas>
+                    </div>
+                    <div class="consumption-2">
+                        <div ng-show="ac.vm.countryFirst && ac.vm.countrySecond" class="gdp-money-label">
+                            $<span class="amount">{{ (ac.vm.countryFirst.consumption / ac.CONST.MONEY_DIVIDER).toFixed(1) }}</span>B vs $<span class="amount">{{ (ac.vm.countrySecond.consumption / ac.CONST.MONEY_DIVIDER).toFixed(1) }}</span>B
+                        </div>
+                    </div>
+                    <div class="consumption-3">
+                        <canvas id="secondCountryConsumption"></canvas>
+                    </div>
+                    <div class="consumption-4">
+                        Consumption
+                        <md-button class="md-icon-button info-button" aria-label="Info">
+                            <md-icon md-svg-icon="info" ng-click="ac.showInfo($event, 0)"></md-icon>
+                        </md-button>
+                        <md-icon class="gdp-formula-sign" md-svg-icon="plus"></md-icon>
+                    </div>
+                    <div class="investments-1">
+                        <canvas id="firstCountryInvestments"></canvas>
+                    </div>
+                    <div class="investments-2">
+                        <div ng-show="ac.vm.countryFirst && ac.vm.countrySecond" class="gdp-money-label">
+                            $<span class="amount">{{ (ac.vm.countryFirst.investments / ac.CONST.MONEY_DIVIDER).toFixed(1) }}</span>B vs $<span class="amount">{{ (ac.vm.countrySecond.investments / ac.CONST.MONEY_DIVIDER).toFixed(1) }}</span>B
+                        </div>
+                    </div>
+                    <div class="investments-3">
+                        <canvas id="secondCountryInvestments"></canvas>
+                    </div>
+                    <div class="investments-4">
+                        Investments
+                        <md-button class="md-icon-button info-button" aria-label="Info">
+                            <md-icon md-svg-icon="info" ng-click="ac.showInfo($event, 1)"></md-icon>
+                        </md-button>
+                        <md-icon class="gdp-formula-sign" md-svg-icon="plus"></md-icon>
+                    </div>
+                    <div class="governmentspending-1">
+                        <canvas id="firstCountryGovernmentSpending"></canvas>
+                    </div>
+                    <div class="governmentspending-2">
+                        <div ng-show="ac.vm.countryFirst && ac.vm.countrySecond" class="gdp-money-label">
+                            $<span class="amount">{{ (ac.vm.countryFirst.governmentSpending / ac.CONST.MONEY_DIVIDER).toFixed(1) }}</span>B vs $<span class="amount">{{ (ac.vm.countrySecond.governmentSpending / ac.CONST.MONEY_DIVIDER).toFixed(1) }}</span>B
+                        </div>
+
+                    </div>
+                    <div class="governmentspending-3">
+                        <canvas id="secondCountryGovernmentSpending"></canvas>
+                    </div>
+                    <div class="governmentspending-4">
+                        Government Spending
+                        <md-button class="md-icon-button info-button" aria-label="Info">
+                            <md-icon md-svg-icon="info" ng-click="ac.showInfo($event, 2)"></md-icon>
+                        </md-button>
+                        <md-icon class="gdp-formula-sign" md-svg-icon="plus"></md-icon>
+                    </div>
+                    <div class="netexport-1">
+                        <canvas id="firstCountryNetExport"></canvas>
+                    </div>
+                    <div class="netexport-2">
+                        <div ng-show="ac.vm.countryFirst && ac.vm.countrySecond" class="gdp-money-label">
+                            $<span class="amount">{{ (ac.vm.countryFirst.netExport / ac.CONST.MONEY_DIVIDER).toFixed(1) }}</span>B vs $<span class="amount">{{ (ac.vm.countrySecond.netExport / ac.CONST.MONEY_DIVIDER).toFixed(1) }}</span>B
+                        </div>
+                    </div>
+                    <div class="netexport-3">
+                        <canvas id="secondCountryNetExport"></canvas>
+                    </div>
+                    <div class="netexport-4">
+                        Net Export
+                        <md-button class="md-icon-button info-button" aria-label="Info">
+                            <md-icon md-svg-icon="info" ng-click="ac.showInfo($event, 3)"></md-icon>
+                        </md-button>
+                        <md-icon class="gdp-formula-sign" md-svg-icon="equal"></md-icon>
+                    </div>
+                    <div class="totalgdp-1">
+                        <canvas id="firstCountryTotalGdp"></canvas>
+                    </div>
+                    <div class="totalgdp-2">
+                        <div ng-show="ac.vm.countryFirst && ac.vm.countrySecond" class="gdp-money-label">
+                            $<span class="amount">{{ (ac.vm.countryFirst.gdpTotal / ac.CONST.MONEY_DIVIDER).toFixed(1) }}</span>B vs $<span class="amount">{{ (ac.vm.countrySecond.gdpTotal / ac.CONST.MONEY_DIVIDER).toFixed(1) }}</span>B
+                        </div>
+                    </div>
+                    <div class="totalgdp-3">
+                        <canvas id="secondCountryTotalGdp"></canvas>
+                    </div>
+                    <div class="totalgdp-4">GDP (currency: $)</div>
+                </div>
+            </md-tab-body>
+        </md-tab>
+
+        <!-- WORLD GDP TIMELINE -->
+        <md-tab id="tab4" md-on-deselect="ac.timelineStop()">
+            <md-tab-label>World GDP Timeline</md-tab-label>
+            <md-tab-body class="md-padding">
+                <section layout="row" layout-fill>
+                    <div flex="80" layout="column" layout-align="space-between stretch" class="md-padding">
+                        <h4 class="chart-title">CORRELATION BETWEEN GDP, GDP/CAPITA AND POPULATION OF COUNTRIES: <span md-colors="{color: 'deep-orange-500'}">{{ac.vm.timelineYear}}</span></h4>
+                        <div flex="90" google-chart chart="ac.charts.history"></div>
+                        <div flex="10" layout="row" layout-align="center" class="md-padding">
+                            <md-button class="md-icon-button" aria-label="Play" ng-click="ac.timelinePlay()">
+                                <md-icon md-svg-icon="play" ng-if="!ac.vm.isPlayed"></md-icon>
+                                <md-icon md-svg-icon="pause" ng-if="ac.vm.isPlayed"></md-icon>
+                            </md-button>
+                            <md-slider flex md-discrete ng-model="ac.vm.timelineYear" step="1" min="{{ac.CONST.YEAR_FIRST}}" max="{{ac.CONST.YEAR_LAST}}" aria-label="year" ng-change="ac.redrawTimelineCharts()"></md-slider>
+                        </div>
+                    </div>
+                    <div flex="20" layout="column" class="md-padding">
+                        <h4 class="geochart-title">TOP-10 COUNTRIES BY TOTAL GDP</h4>
+                        <div google-chart chart="ac.charts.top"></div>
+                        <md-input-container class="md-block">
+                            <md-switch md-colors="{color: 'brown-500'}" name="africa" ng-model="ac.vm.showContinents['Africa']" ng-change="ac.redrawTimelineCharts()">Africa</md-switch>
+                            <md-switch md-colors="{color: 'green-500'}" name="america" ng-model="ac.vm.showContinents['Americas']" ng-change="ac.redrawTimelineCharts()">America</md-switch>
+                            <md-switch md-colors="{color: 'red-500'}" name="asia" ng-model="ac.vm.showContinents['Asia']" ng-change="ac.redrawTimelineCharts()">Asia</md-switch>
+                            <md-switch md-colors="{color: 'lightBlue-500'}" name="europe" ng-model="ac.vm.showContinents['Europe']" ng-change="ac.redrawTimelineCharts()">Europe</md-switch>
+                            <md-switch md-colors="{color: 'orange-500'}" name="oceania" ng-model="ac.vm.showContinents['Oceania']" ng-change="ac.redrawTimelineCharts()">Oceania</md-switch>
+                        </md-input-container>
+
+                        <md-content layout-padding>
+                            <p>
+                                Select a range on GDP Timeline chart to zoom-in.
+                            </p>
+                            <p>
+                                Right mouse button click to reset zoom.
+                            </p>
+                        </md-content>
+                    </div>
+                </section>
+            </md-tab-body>
+        </md-tab>
+    </md-tabs>
+</md-content>
+
+<script src="dist/vendor.bundle.js"></script>
+<script src="dist/app.bundle.js"></script>
+</body>
+</html>
