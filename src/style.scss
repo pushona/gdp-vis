@@ -12,14 +12,15 @@
 /* WHAT IS GDP */
 .grid-container {
   display: grid;
-  grid-template-columns: 3fr 1fr 3fr 2fr;
-  grid-template-rows: auto 100px 100px 100px 100px 100px 100px;
+  grid-template-columns: 3fr 1fr 3fr 1fr;
+  grid-template-rows: auto 30px 100px 100px 100px 100px 100px 100px;
   grid-column-gap: 5px;
   grid-row-gap: 10px;
   justify-items: stretch;
   align-items: stretch;
   grid-template-areas:
     "countries-1 countries-2 countries-3 countries-4"
+    "legend-1 legend-1 legend-1 legend-1"
     "population-1 population-2 population-3 population-4"
     "consumption-1 consumption-2 consumption-3 consumption-4"
     "investments-1 investments-2 investments-3 investments-4"
@@ -44,6 +45,18 @@
     grid-area: countries-4;
     align-self: center;
   }
+  .legend-1 {
+    text-align: center;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    .square {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin-right: 5px;
+      background-color: #000;
+    }
+  }
   .population-1 {
     grid-area: population-1;
     overflow: hidden;
@@ -51,7 +64,7 @@
   .population-2 {
     grid-area: population-2;
     text-align: center;
-    line-height: 100px;
+    //line-height: 100px;
   }
   .population-3 {
     grid-area: population-3;
@@ -69,7 +82,7 @@
   .consumption-2 {
     grid-area: consumption-2;
     text-align: center;
-    line-height: 100px;
+    //line-height: 100px;
   }
   .consumption-3 {
     grid-area: consumption-3;
@@ -90,7 +103,7 @@
   .investments-2 {
     grid-area: investments-2;
     text-align: center;
-    line-height: 100px;
+    //line-height: 100px;
   }
   .investments-3 {
     grid-area: investments-3;
@@ -111,7 +124,7 @@
   .governmentspending-2 {
     grid-area: governmentspending-2;
     text-align: center;
-    line-height: 100px;
+    //line-height: 100px;
   }
   .governmentspending-3 {
     grid-area: governmentspending-3;
@@ -132,7 +145,7 @@
   .netexport-2 {
     grid-area: netexport-2;
     text-align: center;
-    line-height: 100px;
+    //line-height: 100px;
   }
   .netexport-3 {
     grid-area: netexport-3;
@@ -153,7 +166,7 @@
   .totalgdp-2 {
     grid-area: totalgdp-2;
     text-align: center;
-    line-height: 100px;
+    //line-height: 100px;
   }
   .totalgdp-3 {
     grid-area: totalgdp-3;
@@ -175,9 +188,11 @@
     white-space: nowrap;
     background-color: #fff;
     color: #777;
+    font-size: 14px;
     .amount {
       color: #222;
       font-weight: bold;
+      font-size: 16px;
     }
   }
 }

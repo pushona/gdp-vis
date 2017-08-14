@@ -88,6 +88,11 @@
                     <div class="countries-4">
                         <div google-chart chart="ac.charts.gdp"></div>
                     </div>
+                    <div class="legend-1">
+                        <div ng-show="ac.vm.countryFirst && ac.vm.countrySecond">
+                            <span class="square"></span> is a 1 billion US dollars ($).
+                        </div>
+                    </div>
                     <div class="population-1">
                         <canvas id="firstCountryPopulation"></canvas>
                     </div>
@@ -197,7 +202,7 @@
             <md-tab-body class="md-padding">
                 <section layout="row" layout-fill>
                     <div flex="80" layout="column" layout-align="space-between stretch" class="md-padding">
-                        <h4 class="chart-title">CORRELATION BETWEEN GDP, GDP/CAPITA AND POPULATION OF COUNTRIES: <span md-colors="{color: 'deep-orange-500'}">{{ac.vm.timelineYear}}</span></h4>
+                        <h4 class="chart-title">TOTAL GDP, GDP/CAPITA AND COUNTRIES POPULATION: <span md-colors="{color: 'deep-orange-500'}">{{ac.vm.timelineYear}}</span></h4>
                         <div flex="90" google-chart chart="ac.charts.history"></div>
                         <div flex="10" layout="row" layout-align="center" class="md-padding">
                             <md-button class="md-icon-button" aria-label="Play" ng-click="ac.timelinePlay()">
